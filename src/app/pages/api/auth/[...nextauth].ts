@@ -5,6 +5,8 @@ import { PrismaAdapter } from "@next-auth/prisma-adapter"
 import { PrismaClient } from "@prisma/client"
 import bcrypt from "bcrypt"
 import { User } from "../../../types/auth"
+import { sendVerificationEmail } from '../../../utils/email';
+
 
 
 const prisma = new PrismaClient()

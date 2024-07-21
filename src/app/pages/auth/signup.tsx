@@ -3,6 +3,8 @@ import { useState, FormEvent } from "react"
 import { useRouter } from "next/router"
 import Head from 'next/head'
 import { SignUpData } from "../../types/auth"
+import { isPasswordStrong } from '../../utils/passwordStrength';
+
 
 export default function SignUp(): JSX.Element {
   const [userData, setUserData] = useState<SignUpData>({
@@ -19,10 +21,13 @@ export default function SignUp(): JSX.Element {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(userData),
     })
+    if (!isPasswordStrong(userData.password)) {
+      setError('Password must be at least 8 characters long and contain uppercase, lowercase, numbers, and special characters.');
+      return;
+    }
     if (response.ok) {
       router.push('/auth/signin')
     } else {
-      // Handle error
       alert("Sign up failed. Please try again.")
     }
   }
@@ -112,4 +117,8 @@ export default function SignUp(): JSX.Element {
       </div>
     </div>
   )
+}
+
+function setError(arg0: string) {
+  throw new Error("Function not implemented.");
 }
