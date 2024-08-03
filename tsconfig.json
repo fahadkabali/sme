@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "target": "es2017",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
@@ -17,10 +18,26 @@
         "name": "next"
       }
     ],
+    "baseUrl": "./",
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@styles/*": ["src/app/styles/*"],
+      "@components/*": ["src/app/components/*"],
+      "@constants/*": ["src/app/constants/*"],
+      "@utils/*": ["src/app/utils/*"],
+      "@models/*": ["src/app/models/*"],
+      "@services/*": ["src/app/services/*"],
+      "@layouts/*": ["src/app/layouts/*"],
+      "@providers/*": ["src/app/providers/*"],
+      "@hooks/*": ["src/app/hooks/*"],
+      "@api/*": ["src/app/pages/api/*"],
+      "@pages/*": ["src/app/pages/*"],
+      "@types/*": ["src/app/types/*"],
+      "@public/*": ["src/app/public/*"],
+      "@assets/*": ["src/app/assets/*"]
+      
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/app/pages/api/auth/[...nextauth].ts", "src/app/pages/auth/signin.tsx", "src/app/pages/auth/signup.tsx", "src/app/layout.tsx", "src/app/components/withAuth.tsx", "src/app/pages/sme-dashboard.jsx", "src/app/pages/api/users/index.ts"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/app/pages/api/auth/[...nextauth].ts", "src/app/pages/auth/signin.tsx", "src/app/pages/auth/signup.tsx", "src/app/layout.tsx", "src/app/components/withAuth.tsx", "src/app/pages/sme-dashboard.jsx", "src/app/pages/api/users/index.ts", "src/app/pages/api/auth/enable2fa.js"],
   "exclude": ["node_modules"]
 }

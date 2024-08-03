@@ -1,4 +1,3 @@
-// pages/api/auth/request-reset.ts
 import { NextApiRequest, NextApiResponse } from 'next';
 import { v4 as uuidv4 } from 'uuid';
 import { sendPasswordResetEmail } from '../../../utils/email';

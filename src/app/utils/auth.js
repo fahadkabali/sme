@@ -1,4 +1,3 @@
-// utilities/auth.js
 import { auth } from './firebase';
 
 // Register

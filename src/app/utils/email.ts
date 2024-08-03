@@ -1,4 +1,3 @@
-// utils/email.ts
 import nodemailer from 'nodemailer';
 
 // Create a nodemailer transporter

@@ -1,4 +1,3 @@
-// pages/forgot-password.tsx
 import { useState } from 'react';
 import { useRouter } from 'next/router';
 

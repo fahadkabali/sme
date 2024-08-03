@@ -1,4 +1,3 @@
-// pages/api/auth/[...nextauth].ts
 import NextAuth, { NextAuthOptions } from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
 import bcrypt from "bcrypt"
@@ -9,7 +8,13 @@ import { PrismaAdapter } from "@next-auth/prisma-adapter"
 import { PrismaClient } from "@prisma/client"
 import rateLimit from 'express-rate-limit';
 
+
 const prisma = new PrismaClient()
+
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, 
+  max: 5 
+});
 
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
@@ -52,93 +57,116 @@ export const authOptions: NextAuthOptions = {
   },
   pages: {
     signIn: "/auth/signin",
+  },
+  session: {
+    strategy: "jwt",
+    maxAge: 30 * 24 * 60 * 60,
+    updateAge: 24 * 60 * 60, 
+  },
+  jwt: {
+    secret: process.env.JWT_SECRET,
   }
 }
-export default NextAuth(authOptions)
 
+const handler = NextAuth(authOptions);
 
-//   session: {
-//     strategy: "jwt",
-//     maxAge: 30 * 24 * 60 * 60, // 30 days
-//     updateAge: 24 * 60 * 60, // 24 hours
-//   },
-//   jwt: {
-//     secret: process.env.JWT_SECRET,
-//     encryption: true,
-//   }
-// }
+export default async function wrappedHandler(req: { method: string; url: string | string[] }, res: any) {
+  await limiter(req, res);
+  if (req.method === 'POST') {
+    if (req.url?.includes('request-reset')) {
+      return handlePasswordResetRequest(req, res);
+    } else if (req.url?.includes('reset-password')) {
+      return handlePasswordReset(req, res);
+    }else if (req.url?.includes('signup')) {
+      return handleSignUp(req, res);
+    }
+  }
+  return handler(req, res);
+}
 
-// const handler = NextAuth(authOptions);
+async function handlePasswordResetRequest(req: { method?: string; url?: string | string[]; body?: any }, res: { status: (arg0: number) => { (): any; new(): any; json: { (arg0: { message: string }): void; new(): any } } }) {
+  const { email } = req.body;
 
-// export default async function wrappedHandler(req: { method: string; url: string | string[] }, res: any) {
-//   if (req.method === 'POST') {
-//     if (req.url?.includes('request-reset')) {
-//       return handlePasswordResetRequest(req, res);
-//     } else if (req.url?.includes('reset-password')) {
-//       return handlePasswordReset(req, res);
-//     }
-//   }
-//   return handler(req, res);
-// }
+  try {
+    const user = await prisma.user.findUnique({ where: { email } });
+    if (!user) {
+      // Don't reveal that the user doesn't exist
+      return res.status(200).json({ message: 'If a user with that email exists, a password reset link has been sent.' });
+    }
 
-// async function handlePasswordResetRequest(req: { method?: string; url?: string | string[]; body?: any }, res: { status: (arg0: number) => { (): any; new(): any; json: { (arg0: { message: string }): void; new(): any } } }) {
-//   const { email } = req.body;
+    const token = uuidv4();
+    const expires = new Date(Date.now() + 3600000); 
 
-//   try {
-//     const user = await prisma.user.findUnique({ where: { email } });
-//     if (!user) {
-//       // Don't reveal that the user doesn't exist
-//       return res.status(200).json({ message: 'If a user with that email exists, a password reset link has been sent.' });
-//     }
+    await prisma.passwordReset.create({
+      data: {
+        userId: user.id,
+        token,
+        expires,
+      },
+    });
 
-//     const token = uuidv4();
-//     const expires = new Date(Date.now() + 3600000); 
+    await sendPasswordResetEmail(user.email, token);
 
-//     await prisma.passwordReset.create({
-//       data: {
-//         userId: user.id,
-//         token,
-//         expires,
-//       },
-//     });
+    res.status(200).json({ message: 'If a user with that email exists, a password reset link has been sent.' });
+  } catch (error) {
+    console.error('Password reset request error:', error);
+    res.status(500).json({ message: 'An error occurred while processing your request.' });
+  }
+}
 
-//     await sendPasswordResetEmail(user.email, token);
+async function handlePasswordReset(req: { method?: string; url?: string | string[]; body?: any }, res: { status: (arg0: number) => { (): any; new(): any; json: { (arg0: { message: string }): void; new(): any } } }) {
+  const { token, newPassword } = req.body;
 
-//     res.status(200).json({ message: 'If a user with that email exists, a password reset link has been sent.' });
-//   } catch (error) {
-//     console.error('Password reset request error:', error);
-//     res.status(500).json({ message: 'An error occurred while processing your request.' });
-//   }
-// }
+  try {
+    const passwordReset = await prisma.passwordReset.findUnique({
+      where: { token },
+      include: { user: true },
+    });
 
-// async function handlePasswordReset(req: { method?: string; url?: string | string[]; body?: any }, res: { status: (arg0: number) => { (): any; new(): any; json: { (arg0: { message: string }): void; new(): any } } }) {
-//   const { token, newPassword } = req.body;
+    if (!passwordReset || passwordReset.expires < new Date()) {
+      return res.status(400).json({ message: 'Invalid or expired password reset token.' });
+    }
 
-//   try {
-//     const passwordReset = await prisma.passwordReset.findUnique({
-//       where: { token },
-//       include: { user: true },
-//     });
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
 
-//     if (!passwordReset || passwordReset.expires < new Date()) {
-//       return res.status(400).json({ message: 'Invalid or expired password reset token.' });
-//     }
+    await prisma.user.update({
+      where: { id: passwordReset.userId },
+      data: { password: hashedPassword },
+    });
 
-//     const hashedPassword = await bcrypt.hash(newPassword, 10);
+    await prisma.passwordReset.delete({
+      where: { id: passwordReset.id },
+    });
 
-//     await prisma.user.update({
-//       where: { id: passwordReset.userId },
-//       data: { password: hashedPassword },
-//     });
+    res.status(200).json({ message: 'Password has been reset successfully.' });
+  } catch (error) {
+    console.error('Password reset error:', error);
+    res.status(500).json({ message: 'An error occurred while resetting your password.' });
+  }
+}
 
-//     await prisma.passwordReset.delete({
-//       where: { id: passwordReset.id },
-//     });
+async function handleSignUp(req: { method?: string; url?: string | string[]; body?: any }, res: { status: (arg0: number) => { (): any; new(): any; json: { (arg0: { message: string }): void; new(): any } } }) {
+  const { email, password, role } = req.body;
 
-//     res.status(200).json({ message: 'Password has been reset successfully.' });
-//   } catch (error) {
-//     console.error('Password reset error:', error);
-//     res.status(500).json({ message: 'An error occurred while resetting your password.' });
-//   }
-// }
+  try {
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const verificationToken = uuidv4();
+
+    const user = await prisma.user.create({
+      data: {
+        email,
+        password: hashedPassword,
+        role,
+        emailVerificationToken: verificationToken,
+      },
+    });
+
+    await sendVerificationEmail(user.email, verificationToken);
+
+    res.status(201).json({ message: 'User created successfully. Please check your email to verify your account.' });
+  } catch (error) {
+    console.error('Sign up error:', error);
+    res.status(500).json({ message: 'An error occurred while creating your account.' });
+  }
+}
 
