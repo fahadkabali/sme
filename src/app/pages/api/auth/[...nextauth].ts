@@ -7,6 +7,7 @@ import { v4 as uuidv4 } from 'uuid'
 import { sendPasswordResetEmail, sendVerificationEmail } from '../../../utils/email'
 import { PrismaAdapter } from "@next-auth/prisma-adapter"
 import { PrismaClient } from "@prisma/client"
+import rateLimit from 'express-rate-limit';
 
 const prisma = new PrismaClient()
 
@@ -32,6 +33,7 @@ export const authOptions: NextAuthOptions = {
         }
         return null;
       }
+      
     })
   ],
   callbacks: {
