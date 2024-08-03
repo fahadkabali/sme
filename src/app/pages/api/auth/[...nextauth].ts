@@ -1,56 +1,60 @@
-// // pages/api/auth/[...nextauth].ts
-// import NextAuth, { NextAuthOptions } from "next-auth"
-// import CredentialsProvider from "next-auth/providers/credentials"
-// import bcrypt from "bcrypt"
-// import { User } from "../../../types/auth"
-// import { v4 as uuidv4 } from 'uuid'
-// import { sendPasswordResetEmail, sendVerificationEmail } from '../../../utils/email'
-// import { PrismaAdapter } from "@next-auth/prisma-adapter"
-// import { PrismaClient } from "@prisma/client"
+// pages/api/auth/[...nextauth].ts
+import NextAuth, { NextAuthOptions } from "next-auth"
+import CredentialsProvider from "next-auth/providers/credentials"
+import bcrypt from "bcrypt"
+import { User } from "../../../types/auth"
+import { v4 as uuidv4 } from 'uuid'
+import { sendPasswordResetEmail, sendVerificationEmail } from '../../../utils/email'
+import { PrismaAdapter } from "@next-auth/prisma-adapter"
+import { PrismaClient } from "@prisma/client"
 
-// const prisma = new PrismaClient()
+const prisma = new PrismaClient()
 
-// export const authOptions: NextAuthOptions = {
-//   adapter: PrismaAdapter(prisma),
-//   providers: [
-//     CredentialsProvider({
-//       name: "Credentials",
-//       credentials: {
-//         email: { label: "Email", type: "text" },
-//         password: { label: "Password", type: "password" }
-//       },
-//       async authorize(credentials) {
-//         if (!credentials) return null;
-//         const user = await prisma.user.findUnique({
-//           where: { email: credentials.email }
-//         });
-//         if (user && bcrypt.compareSync(credentials.password, user.password)) {
-//           if (!user.emailVerified) {
-//             throw new Error('Please verify your email before logging in.');
-//           }
-//           return { id: user.id, email: user.email, role: user.role };
-//         }
-//         return null;
-//       }
-//     })
-//   ],
-//   callbacks: {
-//     async jwt({ token, user }) {
-//       if (user) {
-//         token.role = (user as User).role;
-//       }
-//       return token;
-//     },
-//     async session({ session, token }) {
-//       if (session.user) {
-//         (session.user as User).role = token.role as 'SME' | 'BigBrand';
-//       }
-//       return session;
-//     }
-//   },
-//   pages: {
-//     signIn: "/auth/signin",
-//   },
+export const authOptions: NextAuthOptions = {
+  adapter: PrismaAdapter(prisma),
+  providers: [
+    CredentialsProvider({
+      name: "Credentials",
+      credentials: {
+        email: { label: "Email", type: "text" },
+        password: { label: "Password", type: "password" }
+      },
+      async authorize(credentials) {
+        if (!credentials) return null;
+        const user = await prisma.user.findUnique({
+          where: { email: credentials.email }
+        });
+        if (user && bcrypt.compareSync(credentials.password, user.password)) {
+          if (!user.emailVerified) {
+            throw new Error('Please verify your email before logging in.');
+          }
+          return { id: user.id, email: user.email, role: user.role };
+        }
+        return null;
+      }
+    })
+  ],
+  callbacks: {
+    async jwt({ token, user }) {
+      if (user) {
+        token.role = (user as User).role;
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      if (session.user) {
+        (session.user as User).role = token.role as 'SME' | 'BigBrand';
+      }
+      return session;
+    }
+  },
+  pages: {
+    signIn: "/auth/signin",
+  }
+}
+export default NextAuth(authOptions)
+
+
 //   session: {
 //     strategy: "jwt",
 //     maxAge: 30 * 24 * 60 * 60, // 30 days
@@ -136,48 +140,3 @@
 //   }
 // }
 
-
-import NextAuth from "next-auth"
-import CredentialsProvider from "next-auth/providers/credentials"
-import { PrismaAdapter } from "@next-auth/prisma-adapter"
-import { PrismaClient } from "@prisma/client"
-
-import bcrypt from "bcrypt"
-const prisma = new PrismaClient()
-
-export default NextAuth({
-  adapter: PrismaAdapter(prisma),
-  providers: [
-    CredentialsProvider({
-      name: "Credentials",
-      credentials: {
-        email: { label: "Email", type: "text" },
-        password: { label: "Password", type: "password" }
-      },
-      async authorize(credentials) {
-        const user = await prisma.user.findUnique({
-          where: { email: credentials.email }
-        });
-        if (user && bcrypt.compareSync(credentials.password, user.password)) {
-          return { id: user.id, email: user.email, role: user.role };
-        }
-        return null;
-      }
-    })
-  ],
-  callbacks: {
-    async jwt({ token, user }) {
-      if (user) {
-        token.role = user.role;
-      }
-      return token;
-    },
-    async session({ session, token }) {
-      session.user.role = token.role;
-      return session;
-    }
-  },
-  pages: {
-    signIn: "/auth/signin",
-  }
-})
