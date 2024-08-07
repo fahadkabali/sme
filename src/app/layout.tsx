@@ -19,7 +19,7 @@ export const metadata: Metadata = {
 };
  
  
-const fontSans = FontSans({
+const inter = FontSans({
   subsets: ["latin"],
   variable: "--font-sans",
 })
@@ -45,7 +45,7 @@ export default function RootLayout({
                                     {/*-- if user is signed in --*/}
             <SignedIn>
             <Link href='/dashboard' className=''>
-            Dashboard
+              Dashboard
             </Link>
             <UserButton showName />
             </SignedIn>
