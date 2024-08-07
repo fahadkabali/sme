@@ -51,8 +51,7 @@ export default function RootLayout({
             </SignedIn>
           </div>
         </nav>
-
-                        {children}
+          {children}
       </body>
     </html>
   </ClerkProvider>

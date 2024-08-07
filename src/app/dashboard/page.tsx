@@ -3,6 +3,7 @@ import InvoiceTable from "@/app/components/InvoiceTable";
 import React, { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import SideNav from "@/app/components/SideNav";
+import { useUser } from "@clerk/nextjs";
 
 export default function Dashboard() {
   const { isLoaded, isSignedIn, user } = useUser();
