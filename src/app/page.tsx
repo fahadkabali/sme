@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getDBVersion } from "./db";
+import { getDBVersion } from "./db/ index";
 
 export default async function Home() {
     const { version } = await getDBVersion();
