@@ -1,4 +1,4 @@
-import { invoicesDB, customersDB, bankInfoDB } from ".";
+import { invoicesDB, customersDB, bankInfoDB } from '.';
 import { invoicesTable, customersTable, bankInfoTable } from './schema';
 import { desc, eq } from "drizzle-orm";
 
