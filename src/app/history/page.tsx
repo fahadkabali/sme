@@ -2,15 +2,22 @@
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import SideNav from "@/app/components/SideNav";
+import { useUser } from "@clerk/nextjs";
 
 export default function History() {
   const { isLoaded, isSignedIn, user } = useUser();
   const [invoices, setInvoices] = useState<Invoice[]>([]);
+  const navItems = [
+    { label: 'Home', href: '/' },
+    { label: 'About', href: '/about' },
+    { label: 'Contact', href: '/contact' },
+  ];
+  
 
   return (
     <div className='w-full'>
       <main className='min-h-[90vh] flex items-start'>
-        <SideNav />
+      <SideNav items={navItems} />
         <div className='md:w-5/6 w-full h-full p-6'>
           <h2 className='text-2xl font-bold'>History</h2>
           <p className='opacity-70 mb-4'>View all your invoices and their status</p>

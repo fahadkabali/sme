@@ -1,4 +1,4 @@
-import CustomersTable from "../components/CustomersTable";
+import CustomersTable from "../components/CustomerTable";
 import { useCallback, useEffect, useState } from "react";
 import SideNav from "@/app/components/SideNav";
 
@@ -13,11 +13,15 @@ export default function Customers() {
     e.preventDefault();
     // 👉🏻 createCustomer();
   };
-
+  const navItems = [
+    { label: 'Home', href: '/' },
+    { label: 'About', href: '/about' },
+    { label: 'Contact', href: '/contact' },
+  ];
   return (
     <div className='w-full'>
       <main className='min-h-[90vh] flex items-start'>
-        <SideNav />
+      <SideNav items={navItems} />
         <div className='md:w-5/6 w-full h-full p-6'>
           <h2 className='text-2xl font-bold'>Customers</h2>
           <p className='opacity-70 mb-4'>Create and view all your customers</p>

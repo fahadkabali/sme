@@ -5,6 +5,17 @@ import { useRouter } from "next/navigation";
 import SideNav from "@/app/components/SideNav";
 import { useUser } from "@clerk/nextjs";
 
+const navItems = [
+  { label: 'Home', href: '/' },
+  { label: 'About', href: '/about' },
+  { label: 'Contact', href: '/contact' },
+];
+const invoices = [
+  { id: '1', invoiceNumber: 'INV-001', customerName: 'John Doe', amount: 100.00, dueDate: '2023-12-31', status: 'Paid' },
+  { id: '2', invoiceNumber: 'INV-002', customerName: 'Jane Smith', amount: 200.00, dueDate: '2024-01-15', status: 'Pending' },
+  // ... more invoices
+];
+
 export default function Dashboard() {
   const { isLoaded, isSignedIn, user } = useUser();
   const [itemList, setItemList] = useState<Item[]>([]);
@@ -52,7 +63,7 @@ export default function Dashboard() {
   return (
     <div className='w-full'>
       <main className='min-h-[90vh] flex items-start'>
-        <SideNav />
+      <SideNav items={navItems} />
         <div className='md:w-5/6 w-full h-full p-6'>
           <h2 className='font-bold text-2xl mb-3'>Add new invoice</h2>
 
@@ -140,7 +151,7 @@ export default function Dashboard() {
               </button>
             </div>
 
-            <InvoiceTable itemList={itemList} />
+            <InvoiceTable invoices ={invoices} />
             <button
               className='bg-blue-800 text-gray-100 w-full p-4 rounded my-6'
               type='submit'
