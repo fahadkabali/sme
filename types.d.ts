@@ -30,3 +30,4 @@ interface BankInfo {
     bank_name: string,
     currency: string
 }
+
