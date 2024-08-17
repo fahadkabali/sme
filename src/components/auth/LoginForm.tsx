@@ -26,14 +26,10 @@ export default function LoginForm() {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center px-6 pt-8 mx-auto md:h-screen dark:bg-gray-900">
-      <a href="/" className="flex items-center justify-center mb-8 text-2xl font-semibold lg:mb-10 dark:text-white">
-        <img src="/images/logo.svg" className="mr-4 h-11" alt="Logo" />
-        <span>Flowbite</span>  
-      </a>
-      <div className="w-full max-w-xl p-6 space-y-8 sm:p-8 bg-white rounded-lg shadow dark:bg-gray-800">
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="max-w-md w-full space-y-8">
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
-          Sign in to platform
+          Log in to your account
         </h2>
         <form onSubmit={handleSubmit} className="mt-8 space-y-6">
           {error && (

@@ -5,6 +5,7 @@ export default function RegisterForm() {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
   const [companyName, setCompanyName] = useState('')
   const [companyType, setCompanyType] = useState('')
   const router = useRouter()
@@ -12,6 +13,11 @@ export default function RegisterForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     
+    if (password !== confirmPassword) {
+      // Handle error: Passwords do not match
+      return
+    }
+
     const response = await fetch('/api/register', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -26,14 +32,10 @@ export default function RegisterForm() {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center px-6 pt-8 mx-auto md:h-screen dark:bg-gray-900">
-      <a href="/" className="flex items-center justify-center mb-8 text-2xl font-semibold lg:mb-10 dark:text-white">
-        <img src="/images/logo.svg" className="mr-4 h-11" alt="Logo" />
-        <span>Flowbite</span>  
-      </a>
-      <div className="w-full max-w-xl p-6 space-y-8 sm:p-8 bg-white rounded-lg shadow dark:bg-gray-800">
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-md w-full space-y-8">
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
-          Create a Free Account
+        Register for an account
         </h2>
         <form onSubmit={handleSubmit} className="mt-8 space-y-6">
           <div>
@@ -81,10 +83,40 @@ export default function RegisterForm() {
               type="password"
               name="confirm-password"
               id="confirm-password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
               placeholder="••••••••"
-              className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
               required
+              className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
             />
+          </div>
+          <div>
+            <label htmlFor="companyName" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Company Name</label>
+            <input
+              type="text"
+              name="companyName"
+              id="companyName"
+              value={companyName}
+              onChange={(e) => setCompanyName(e.target.value)}
+              placeholder="Company Name"
+              required
+              className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+            />
+          </div>
+          <div>
+            <label htmlFor="companyType" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Company Type</label>
+            <select
+              id="companyType"
+              name="companyType"
+              value={companyType}
+              onChange={(e) => setCompanyType(e.target.value)}
+              required
+              className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+            >
+              <option value="">Select Company Type</option>
+              <option value="SME">SME</option>
+              <option value="Large Enterprise">Large Enterprise</option>
+            </select>
           </div>
           <div className="flex items-start">
             <div className="flex items-center h-5">
