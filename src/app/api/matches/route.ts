@@ -17,7 +17,7 @@ export async function GET(req: Request) {
   const location = url.searchParams.get('location') || undefined
 
   try {
-    const matches = await findMatches(session.user?.id as string, page, 10, {
+    const matches = await findMatches((session.user as {id: string}).id, page, 10, {
       search,
       industry,
       companyType,

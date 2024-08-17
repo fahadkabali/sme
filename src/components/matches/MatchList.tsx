@@ -79,21 +79,21 @@ export default function MatchList() {
             type="text"
             value={industry}
             onChange={(e) => setIndustry(e.target.value)}
-            placeholder="Industry"
+            placeholder="Industry..."
             className="w-full p-2 border rounded"
           />
           <input
             type="text"
             value={companyType}
             onChange={(e) => setCompanyType(e.target.value)}
-            placeholder="Company Type"
+            placeholder="Company Type..."
             className="w-full p-2 border rounded"
           />
           <input
             type="text"
             value={location}
             onChange={(e) => setLocation(e.target.value)}
-            placeholder="Location"
+            placeholder="Location..."
             className="w-full p-2 border rounded"
           />
         </div>

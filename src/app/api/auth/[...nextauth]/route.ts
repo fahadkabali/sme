@@ -43,6 +43,10 @@ const handler = NextAuth({
       }
     })
   ],
+  jwt: {
+    secret: process.env.NEXTAUTH_SECRET,
+    
+  },
   session: {
     strategy: 'jwt'
   },

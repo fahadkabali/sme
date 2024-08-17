@@ -1,8 +1,8 @@
 import { prisma } from './db'
 
 interface MatchCriteria {
-  industry: string
-  companyType: string
+  industry: string;
+  companyType: string;
   location: string
 }
 
