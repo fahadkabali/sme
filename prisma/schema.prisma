@@ -12,6 +12,21 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model MatchInteraction {
+  id        String   @id @default(cuid())
+  userId    String
+  matchId   String
+  status    String   // e.g., "interested", "not interested", "contacted"
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user  User  @relation("UserInteractions", fields: [userId], references: [id])
+  match User  @relation("MatchInteractions", fields: [matchId], references: [id])
+
+  @@unique([userId, matchId])
+}
+
 model User {
   id            String    @id @default(cuid())
   name          String?
@@ -25,4 +40,6 @@ model User {
   website       String?
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
+  interactions       MatchInteraction[] @relation("UserInteractions")
+  matchedInteractions MatchInteraction[] @relation("MatchInteractions")
 }
