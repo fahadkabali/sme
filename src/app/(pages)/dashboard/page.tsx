@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import LogoutButton from '@/components/auth/LogoutButton'
 import MatchList from '@/components/matches/MatchList'
+import InteractionsDashboard from '@/components/dashboard/InteractionsDashboard'
 
 export default async function DashboardPage() {
   const session = await getServerSession()
@@ -24,6 +25,12 @@ export default async function DashboardPage() {
       </div>
       <p className="mb-8">You are logged in as: {session.user?.email}</p>
       <MatchList />
+      <div className="mt-8">
+        <InteractionsDashboard />
+      </div>
+      <div className="mt-8">
+        <MatchList />
+      </div>
     </div>
   )
 }

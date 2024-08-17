@@ -6,7 +6,14 @@ interface MatchCriteria {
   location: string
 }
 
-export async function findMatches(userId: string, page = 1, limit = 10) {
+interface SearchFilters {
+  search?: string
+  industry?: string
+  companyType?: string
+  location?: string
+}
+
+export async function findMatches(userId: string, page = 1, limit = 10, filters: SearchFilters = {}) {
   const user = await prisma.user.findUnique({
     where: { id: userId },
   })
@@ -16,10 +23,20 @@ export async function findMatches(userId: string, page = 1, limit = 10) {
   }
 
   const matchCriteria: MatchCriteria = {
-    industry: user.industry || '',
-    companyType: user.companyType === 'SME' ? 'Large Enterprise' : 'SME',
-    location: user.location || '',
+    industry: filters.industry || user.industry || '',
+    companyType: filters.companyType || (user.companyType === 'SME' ? 'Large Enterprise' : 'SME'),
+    location: filters.location || user.location || '',
   }
+
+  const searchFilter = filters.search
+    ? {
+        OR: [
+          { name: { contains: filters.search, mode: 'insensitive' } },
+          { companyName: { contains: filters.search, mode: 'insensitive' } },
+          { description: { contains: filters.search, mode: 'insensitive' } },
+        ],
+      }
+    : {}
 
   const potentialMatches = await prisma.user.findMany({
     where: {
@@ -28,6 +45,7 @@ export async function findMatches(userId: string, page = 1, limit = 10) {
         { industry: matchCriteria.industry },
         { companyType: matchCriteria.companyType },
         { location: matchCriteria.location },
+        searchFilter,
       ],
     },
     skip: (page - 1) * limit,
@@ -41,6 +59,7 @@ export async function findMatches(userId: string, page = 1, limit = 10) {
         { industry: matchCriteria.industry },
         { companyType: matchCriteria.companyType },
         { location: matchCriteria.location },
+        searchFilter,
       ],
     },
   })

@@ -9,8 +9,20 @@ export async function GET(req: Request) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
+  const url = new URL(req.url)
+  const page = parseInt(url.searchParams.get('page') || '1')
+  const search = url.searchParams.get('search') || undefined
+  const industry = url.searchParams.get('industry') || undefined
+  const companyType = url.searchParams.get('companyType') || undefined
+  const location = url.searchParams.get('location') || undefined
+
   try {
-    const matches = await findMatches(session.user?.email as string)
+    const matches = await findMatches(session.user?.id as string, page, 10, {
+      search,
+      industry,
+      companyType,
+      location,
+    })
     return NextResponse.json(matches)
   } catch (error) {
     console.error('Matching error:', error)

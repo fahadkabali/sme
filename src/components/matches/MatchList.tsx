@@ -22,13 +22,24 @@ interface MatchesResponse {
 export default function MatchList() {
   const [matchesData, setMatchesData] = useState<MatchesResponse | null>(null)
   const [currentPage, setCurrentPage] = useState(1)
+  const [searchTerm, setSearchTerm] = useState('')
+  const [industry, setIndustry] = useState('')
+  const [companyType, setCompanyType] = useState('')
+  const [location, setLocation] = useState('')
 
   useEffect(() => {
     fetchMatches(currentPage)
-  }, [currentPage])
+  }, [currentPage, searchTerm, industry, companyType, location])
 
   async function fetchMatches(page: number) {
-    const response = await fetch(`/api/matches?page=${page}`)
+    const params = new URLSearchParams({
+      page: page.toString(),
+      ...(searchTerm && { search: searchTerm }),
+      ...(industry && { industry }),
+      ...(companyType && { companyType }),
+      ...(location && { location }),
+    })
+    const response = await fetch(`/api/matches?${params}`)
     if (response.ok) {
       const data = await response.json()
       setMatchesData(data)
@@ -55,6 +66,38 @@ export default function MatchList() {
   return (
     <div>
       <h2 className="text-xl font-bold mb-4">Your Matches</h2>
+      <div className="mb-4 space-y-2">
+        <input
+            type="text"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            placeholder="Search matches..."
+            className="w-full p-2 border rounded"
+        />
+        <div className="flex space-x-2">
+        <input
+            type="text"
+            value={industry}
+            onChange={(e) => setIndustry(e.target.value)}
+            placeholder="Industry"
+            className="w-full p-2 border rounded"
+          />
+          <input
+            type="text"
+            value={companyType}
+            onChange={(e) => setCompanyType(e.target.value)}
+            placeholder="Company Type"
+            className="w-full p-2 border rounded"
+          />
+          <input
+            type="text"
+            value={location}
+            onChange={(e) => setLocation(e.target.value)}
+            placeholder="Location"
+            className="w-full p-2 border rounded"
+          />
+        </div>
+      </div>
       {matchesData.matches.length === 0 ? (
         <p>No matches found.</p>
       ) : (
@@ -63,9 +106,9 @@ export default function MatchList() {
             {matchesData.matches.map(match => (
               <li key={match.id} className="border p-4 rounded">
                 <h3 className="font-bold">{match.companyName}</h3>
-                <p>Type: {match.companyType}</p>
-                <p>Industry: {match.industry}</p>
-                <p>Location: {match.location}</p>
+                <p><strong>Type:</strong>Type: {match.companyType}</p>
+                <p><strong>Industry:</strong>Industry: {match.industry}</p>
+                <p><strong>Location</strong>Location: {match.location}</p>
                 <div className="mt-2 space-x-2">
                   <button
                     onClick={() => handleInteraction(match.id, 'interested')}
