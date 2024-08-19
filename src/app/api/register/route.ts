@@ -23,6 +23,7 @@ export async function POST(req: Request) {
         password: hashedPassword,
         companyName,
         companyType,
+        role,
       },
     })
 

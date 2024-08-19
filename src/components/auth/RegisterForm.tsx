@@ -8,13 +8,18 @@ export default function RegisterForm() {
   const [confirmPassword, setConfirmPassword] = useState('')
   const [companyName, setCompanyName] = useState('')
   const [companyType, setCompanyType] = useState('')
+  const [errors, setErrors] = useState({});
   const router = useRouter()
 
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     
     if (password !== confirmPassword) {
-      // Handle error: Passwords do not match
+      setErrors(newErrors);
       return
     }
 
@@ -27,7 +32,8 @@ export default function RegisterForm() {
     if (response.ok) {
       router.push('/login')
     } else {
-      // Handle error
+      const data = await response.json();
+      setErrors(data);
     }
   }
 

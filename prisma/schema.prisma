@@ -46,6 +46,7 @@ model User {
   password      String
   companyName   String?
   companyType   String?
+  role      Role    @default(SME)
   industry      String?
   location      String?
   description   String?
@@ -56,4 +57,10 @@ model User {
   matchedInteractions MatchInteraction[] @relation("MatchInteractions")
   sentMessages     Message[] @relation("SentMessages")
   receivedMessages Message[] @relation("ReceivedMessages")
+}
+
+enum Role {
+  SME
+  LargeCorporation
+  Admin
 }
