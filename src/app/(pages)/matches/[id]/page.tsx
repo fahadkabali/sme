@@ -3,7 +3,7 @@ import { redirect } from 'next/navigation'
 import { prisma } from '@/lib/db'
 import Link from 'next/link'
 import MessageInterface from '@/components/messages/MessageInterface'
-
+import ProductShowcase from '@/components/vr/ProductShowcase'
 
 export default async function MatchDetailPage({ params }: { params: { id: string } }) {
   const session = await getServerSession()
@@ -26,19 +26,29 @@ export default async function MatchDetailPage({ params }: { params: { id: string
         &larr; Back to Dashboard
       </Link>
       <h1 className="text-2xl font-bold mb-4">{match.companyName}</h1>
-      <div className="bg-white p-6 rounded-lg shadow-md">
-        <p><strong>Company Type:</strong> {match.companyType}</p>
-        <p><strong>Industry:</strong> {match.industry}</p>
-        <p><strong>Location:</strong> {match.location}</p>
-        <p><strong>Description:</strong> {match.description}</p>
-        {match.website && (
-          <p>
-            <strong>Website:</strong>{' '}
-            <a href={match.website} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">
-              {match.website}
-            </a>
-          </p>
-        )}
+      <div className="flex">
+        <div className="w-1/2 mr-8">
+          <div className="bg-white p-6 rounded-lg shadow-md">
+            <p><strong>Company Type:</strong> {match.companyType}</p>
+            <p><strong>Industry:</strong> {match.industry}</p>
+            <p><strong>Location:</strong> {match.location}</p>
+            <p><strong>Description:</strong> {match.description}</p>
+            {match.website && (
+              <p>
+                <strong>Website:</strong>{' '}
+                <a href={match.website} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">
+                  {match.website}
+                </a>
+              </p>
+            )}
+          </div>
+        </div>
+        <div className="w-1/2">
+          <ProductShowcase
+            productImageUrl="/product-image.jpg"
+            productDescription="Check out our latest product in virtual reality!"
+          />
+        </div>
       </div>
       <div className="mt-8">
         <h2 className="text-xl font-bold mb-4">Messages</h2>

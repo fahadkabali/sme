@@ -2,6 +2,13 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 
 export default function RegisterForm() {
+  const [formData, setFormData] = useState({
+    name:'',
+    email:'',
+    password:'',
+    companyName:'',
+    companyType:'',
+  })
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -17,7 +24,8 @@ export default function RegisterForm() {
   };
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    
+
+    const newErrors = {}
     if (password !== confirmPassword) {
       setErrors(newErrors);
       return

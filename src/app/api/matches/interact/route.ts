@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth/next'
 import { prisma } from '@/lib/db'
+import { sendEmail } from '@/lib/email'
 
 export async function POST(req: Request) {
   const session = await getServerSession()
@@ -26,6 +27,17 @@ export async function POST(req: Request) {
         status,
       },
     })
+
+    const match = await prisma.user.findUnique({
+      where:{id:matchId}
+    })
+    if(match){
+      await sendEmail(
+        match.email,
+        `New interaction with your match: ${session.user?.name}`,
+        `The user ${session.user?.name} has marked your company as "${status}".`
+      )
+    }
 
     return NextResponse.json(interaction)
   } catch (error) {
