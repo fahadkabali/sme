@@ -56,6 +56,10 @@ model User {
   matchedInteractions MatchInteraction[] @relation("MatchInteractions")
   sentMessages     Message[] @relation("SentMessages")
   receivedMessages Message[] @relation("ReceivedMessages")
+  mfaEnabled    Boolean @default(false)
+  mfaSecret     String?
+  loginAttempts Int     @default(0)
+  lockedUntil   DateTime?
 }
 
 enum Role {

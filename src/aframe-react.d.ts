@@ -240,9 +240,5 @@ declare module 'aframe-react';
   }
 
   declare module 'aframe-extras';
-  declare module 'react' {
-    interface HTMLAttributes<T> extends AriaAttributes, DOMAttributes<T> {
-      // extends React's HTMLAttributes
-      custom?: string;
-    }
-  }
+  declare module 'qrcode'
+  
