@@ -5,7 +5,7 @@ import bcrypt from 'bcrypt'
 import { verifyMFAToken } from '@/lib/mfa'
 
 const MAX_LOGIN_ATTEMPTS = 5
-const LOCKOUT_DURATION = 15 * 60 * 1000 // 15 minutes
+const LOCKOUT_DURATION = 15 * 60 * 1000 
 
 const handler = NextAuth({
   providers: [

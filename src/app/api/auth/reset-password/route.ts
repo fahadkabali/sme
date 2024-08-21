@@ -3,6 +3,7 @@ import { prisma } from '@/lib/db'
 import { sendEmail } from '@/lib/email'
 import crypto from 'crypto'
 
+
 export async function POST(req: Request) {
   const { email } = await req.json()
 
@@ -12,7 +13,7 @@ export async function POST(req: Request) {
   }
 
   const resetToken = crypto.randomBytes(32).toString('hex')
-  const resetTokenExpiry = Date.now() + 3600000 // 1 hour from now
+  const resetTokenExpiry = Date.now() + 3600000 
 
   await prisma.user.update({
     where: { id: user.id },

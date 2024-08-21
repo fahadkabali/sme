@@ -60,6 +60,8 @@ model User {
   mfaSecret     String?
   loginAttempts Int     @default(0)
   lockedUntil   DateTime?
+  isVerified Boolean @default(false)
+  verificationToken String?
 }
 
 enum Role {

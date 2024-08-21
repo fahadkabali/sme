@@ -1,8 +1,3 @@
-/**
- *
- * Define all global types in this file.
- *
-*/
 
 type User = {
     email: string;
