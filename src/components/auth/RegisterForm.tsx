@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 
 export default function RegisterForm() {
   const [formData, setFormData] = useState({
@@ -155,7 +156,10 @@ export default function RegisterForm() {
             Create account
           </button>
           <div className="text-sm font-medium text-gray-500 dark:text-gray-400">
-            Already have an account? <a href="/login" className="text-primary-700 hover:underline dark:text-primary-500">Login here</a>
+            Already have an account? 
+            <Link href="/login" className="text-primary-700 hover:underline dark:text-primary-500">
+            Login here
+            </Link>
           </div>
         </form>
       </div>
