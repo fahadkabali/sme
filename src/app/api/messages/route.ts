@@ -14,7 +14,7 @@ export async function POST(req: Request) {
   try {
     const message = await prisma.message.create({
       data: {
-        senderId: session.user?.id as string,
+        senderId: (session.user as { id: string }).id as string,
         receiverId,
         content,
       },
@@ -45,8 +45,8 @@ export async function GET(req: Request) {
     const messages = await prisma.message.findMany({
       where: {
         OR: [
-          { senderId: session.user?.id as string, receiverId: matchId },
-          { senderId: matchId, receiverId: session.user?.id as string },
+          { senderId: (session.user as { id: string }).id as string, receiverId: matchId },
+          { senderId: matchId, receiverId: (session.user as { id: string }).id as string },
         ],
       },
       orderBy: { createdAt: 'asc' },

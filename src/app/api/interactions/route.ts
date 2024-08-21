@@ -11,7 +11,7 @@ export async function GET(req: Request) {
 
   try {
     const interactions = await prisma.matchInteraction.findMany({
-      where: { userId: session.user?.id as string },
+      where: { userId: (session.user as { id: string }).id as string },
       include: {
         match: {
           select: {

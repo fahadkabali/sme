@@ -16,13 +16,13 @@ export async function POST(req: Request) {
     const interaction = await prisma.matchInteraction.upsert({
       where: {
         userId_matchId: {
-          userId: session.user?.id as string,
+          userId: (session.user as { id: string }).id as string,
           matchId,
         },
       },
       update: { status },
       create: {
-        userId: session.user?.id as string,
+        userId: (session.user as { id: string }).id as string,
         matchId,
         status,
       },
