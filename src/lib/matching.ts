@@ -1,6 +1,8 @@
 import { prisma } from './db'
 import { getRecommendations } from './recommendations';
 
+
+
 interface MatchCriteria {
   industry: string;
   companyType: string;
@@ -25,44 +27,31 @@ export async function findMatches(userId: string, page = 1, limit = 10, filters:
 
   const matchCriteria: MatchCriteria = {
     industry: filters.industry || user.industry || '',
-    companyType: filters.companyType || (user.companyType === 'SME' ? 'Large Enterprise' : 'SME'),
+    companyType: filters.companyType || (user?.companyType === 'SME' ? 'Large Enterprise' : 'SME'),
     location: filters.location || user.location || '',
   }
+  const whereConditions = {
+    AND: [
+      { id: { not: userId } },
+      { industry: { contains: matchCriteria.industry, mode: 'insensitive' } },
+      { companyType: matchCriteria.companyType },
+      { location: { contains: matchCriteria.location, mode: 'insensitive' } },
+      filters.search ? { OR: [{ companyName: { contains: filters.search, mode: 'insensitive' } }, { description: { contains: filters.search, mode: 'insensitive' } }] } : {},
+    ],
+  }
 
-  const searchFilter = filters.search
-    ? {
-        OR: [
-          { name: { contains: filters.search, mode: 'insensitive' } },
-          { companyName: { contains: filters.search, mode: 'insensitive' } },
-          { description: { contains: filters.search, mode: 'insensitive' } },
-        ],
-      }
-    : {}
+  const whereConditionsModified = whereConditions.AND.reduce((acc, current) => {
+    return { ...acc, ...current };
+  }, {});
 
   const potentialMatches = await prisma.user.findMany({
-    where: {
-      AND: [
-        { id: { not: userId } },
-        { industry: matchCriteria.industry },
-        { companyType: matchCriteria.companyType },
-        { location: matchCriteria.location },
-        searchFilter,
-      ],
-    },
+    where: whereConditionsModified,
     skip: (page - 1) * limit,
     take: limit,
   })
 
   const totalMatches = await prisma.user.count({
-    where: {
-      AND: [
-        { id: { not: userId } },
-        { industry: matchCriteria.industry },
-        { companyType: matchCriteria.companyType },
-        { location: matchCriteria.location },
-        searchFilter,
-      ],
-    },
+    where: whereConditions,
   })
   const recommendations = await getRecommendations(userId, limit)
 

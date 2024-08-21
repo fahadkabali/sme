@@ -3,7 +3,7 @@ import { prisma } from './db'
 
 async function trainRecommendationModel() {
   const users = await prisma.user.findMany()
-  const userFeatures = users.map((user) => [
+  const userFeatures : any = users.map((user) => [
     user.industry,
     user.companyType,
     user.location,
@@ -39,13 +39,15 @@ export async function getRecommendations(userId: string, limit = 10) {
     userFeatures?.location || '',
   ]])
 
-  const predictions = await model.predict(userInput).data()
-  const sortedIndices = predictions[0].argsort((a, b) => b - a)
+  const predictions = await model.predict(userInput)
+  const data = Array.isArray(predictions) ? predictions.map(tensor => tensor.data()) : predictions.data() 
+
+  const sortedIndices = predictions[0].argsort((a: number, b: number) => b - a)
 
   const recommendedUserIds = sortedIndices
-    .filter((index) => userIds[index] !== userId)
+    .filter((index: any) => userIds[index] !== userId) 
     .slice(0, limit)
-    .map((index) => userIds[index])
+    .map((index: any) => userIds[index])
 
   const recommendedUsers = await prisma.user.findMany({
     where: { id: { in: recommendedUserIds } },

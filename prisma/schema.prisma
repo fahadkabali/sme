@@ -46,7 +46,6 @@ model User {
   password      String
   companyName   String?
   companyType   String?
-  role      Role    @default(SME)
   industry      String?
   location      String?
   description   String?
