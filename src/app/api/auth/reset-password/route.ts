@@ -13,7 +13,7 @@ export async function POST(req: Request) {
   }
 
   const resetToken = crypto.randomBytes(32).toString('hex')
-  const resetTokenExpiry = Date.now() + 3600000 
+  const resetTokenExpiry = (Date.now() + 3600000).toString()
 
   await prisma.user.update({
     where: { id: user.id },

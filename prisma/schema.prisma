@@ -62,8 +62,6 @@ model User {
   lockedUntil   DateTime?
   isVerified Boolean @default(false)
   verificationToken String?
-  resetToken String?
-  resetTokenExpiry String?
 }
 
 enum Role {

@@ -2,9 +2,12 @@
 import React from 'react';
 import { useEffect } from 'react'
 import * as aframe from 'aframe';
-import { Entity, Scene } from 'aframe-react';
+import { Entity, Scene, DetailedHTMLProps } from 'aframe-react';
 
-// Reusable Product Model Component
+interface PositionProps {
+  position: { x: number; y: number; z: number; };
+}
+
 const ProductModel = ({ productImageUrl }) => {
   return (
     <Entity
@@ -34,7 +37,6 @@ const ProductDescription = ({ productDescription }) => {
 };
 
 export default function ProductShowcase({ productImageUrl, productDescription }) {
-  // Register the look-at-camera component once on component mount
   useEffect(() => {
     aframe.registerComponent('look-at-camera', {
       update: function () {
@@ -51,8 +53,8 @@ export default function ProductShowcase({ productImageUrl, productDescription })
 
       <ProductModel productImageUrl={productImageUrl} />
       <ProductDescription productDescription={productDescription} />
+      <a-entity position={{ x: 0, y: 1.6, z: 0 }} />
 
-      <a-camera position={{ x: 0, y: 1.6, z: 0 }} />
     </Scene>
   );
 }
