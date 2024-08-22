@@ -145,13 +145,14 @@ export default function RegisterForm() {
             </div>
             <div className="ml-3 text-sm">
               <label htmlFor="accept-terms" className="font-medium text-gray-900 dark:text-white">
-                I accept the <a href="#" className="text-primary-700 hover:underline dark:text-primary-500">Terms and Conditions</a>
+                I accept the 
+                <Link href="#" className="text-primary-700 hover:underline dark:text-primary-500">Terms and Conditions</Link>
               </label>
             </div>
           </div>
           <button
             type="submit"
-            className="w-full px-5 py-3 text-base font-medium text-center text-white bg-primary-700 rounded-lg hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+            className="w-full px-5 py-3 text-base font-medium text-center text-white bg-blue-500 rounded-lg hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
           >
             Create account
           </button>
