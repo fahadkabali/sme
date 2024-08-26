@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Hero from '@components/home/Hero'
 
 export default function Home() {
   return (
@@ -12,6 +13,7 @@ export default function Home() {
           Register
         </Link>
       </div>
+      <Hero />
     </div>
   )
 }
