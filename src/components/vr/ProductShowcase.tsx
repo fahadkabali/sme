@@ -19,7 +19,6 @@ const ProductModel = ({ productImageUrl }) => {
   );
 };
 
-// Reusable Product Description Component
 const ProductDescription = ({ productDescription }) => {
   return (
     <Entity

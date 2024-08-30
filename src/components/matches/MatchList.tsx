@@ -54,7 +54,6 @@ export default function MatchList() {
     })
 
     if (response.ok) {
-      // Optionally, you can update the UI to reflect the interaction
       console.log(`Interaction with match ${matchId} updated to ${status}`)
     }
   }
