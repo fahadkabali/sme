@@ -5,6 +5,7 @@ import "./globals.css";
 import { SessionProvider } from 'next-auth/react'
 import Link from "next/link";
 import { NextAuthProvider } from "./providers/NextAuthProvider";
+import { AIChatbot } from "@/components/AIChatBot/AIChatBot";
 
 
 
@@ -27,6 +28,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
       <NextAuthProvider>
+      <AIChatbot />
           {children}
       </NextAuthProvider>
       </body>
