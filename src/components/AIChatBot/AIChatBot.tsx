@@ -1,18 +1,18 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { ChatCompletionRequestMessage, Configuration, OpenAIApi } from 'openai';
+import OpenAI from 'openai';
 
-// Initialize OpenAI configuration
-const configuration = new Configuration({
+// Initialize OpenAI client
+const openai = new OpenAI({
   apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
+  dangerouslyAllowBrowser: true // Note: This is not recommended for production
 });
-const openai = new OpenAIApi(configuration);
 
 interface Message {
   role: 'user' | 'assistant';
   content: string;
 }
 
-export const AIChatbot: React.FC = () => {
+const AIChatbot: React.FC = () => {
   const [input, setInput] = useState('');
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -34,18 +34,18 @@ export const AIChatbot: React.FC = () => {
     setIsLoading(true);
 
     try {
-      const response = await openai.createChatCompletion({
+      const response = await openai.chat.completions.create({
         model: 'gpt-3.5-turbo',
         messages: [
           { role: 'system', content: 'You are a helpful assistant.' },
           ...messages,
           userMessage,
-        ] as ChatCompletionRequestMessage[],
+        ],
       });
 
       const assistantMessage: Message = {
         role: 'assistant',
-        content: response.data.choices[0].message?.content || 'Sorry, I couldn\'t generate a response.',
+        content: response.choices[0].message?.content || 'Sorry, I couldn\'t generate a response.',
       };
       setMessages((prev) => [...prev, assistantMessage]);
     } catch (error) {
