@@ -1,3 +1,4 @@
+"use client"
 import React, { useState, useEffect, useRef } from 'react';
 import OpenAI from 'openai';
 
@@ -12,7 +13,7 @@ interface Message {
   content: string;
 }
 
-const AIChatbot: React.FC = () => {
+export const AIChatbot: React.FC = () => {
   const [input, setInput] = useState('');
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -50,6 +51,40 @@ const AIChatbot: React.FC = () => {
       setMessages((prev) => [...prev, assistantMessage]);
     } catch (error) {
       console.error('Error calling OpenAI API:', error);
+      setMessages((prev) => [
+        ...prev,
+        { role: 'assistant', content: 'Sorry, there was an error processing your request.' },
+      ]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!input.trim()) return;
+  
+    const userMessage: Message = { role: 'user', content: input };
+    setMessages((prev) => [...prev, userMessage]);
+    setInput('');
+    setIsLoading(true);
+  
+    try {
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ messages: [...messages, userMessage] }),
+      });
+      const data = await response.json();
+  
+      const assistantMessage: Message = {
+        role: 'assistant',
+        content: data.content || 'Sorry, I couldn\'t generate a response.',
+      };
+      setMessages((prev) => [...prev, assistantMessage]);
+    } catch (error) {
+      console.error('Error calling chat API:', error);
       setMessages((prev) => [
         ...prev,
         { role: 'assistant', content: 'Sorry, there was an error processing your request.' },
