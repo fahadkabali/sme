@@ -1,4 +1,5 @@
-import NextAuth from 'next-auth'
+// app/api/auth/[...nextauth]/route.ts
+import NextAuth, { AuthOptions } from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import { prisma } from '@/lib/db'
 import bcrypt from 'bcrypt'
@@ -7,7 +8,7 @@ import { verifyMFAToken } from '@/lib/mfa'
 const MAX_LOGIN_ATTEMPTS = 5
 const LOCKOUT_DURATION = 15 * 60 * 1000 
 
-const handler = NextAuth({
+export const authOptions: AuthOptions = {
   providers: [
     CredentialsProvider({
       name: 'Credentials',
@@ -90,6 +91,8 @@ const handler = NextAuth({
       return session
     }
   },
-})
+}
+
+const handler = NextAuth(authOptions)
 
 export { handler as GET, handler as POST }

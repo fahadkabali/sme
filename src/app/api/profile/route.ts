@@ -1,25 +1,49 @@
-import { NextResponse } from 'next/server'
-import { getServerSession } from 'next-auth/next'
-import { prisma } from '@/lib/db'
+// app/api/profile/route.ts
+import { getServerSession } from "next-auth/next"
+import { authOptions } from "../auth/[...nextauth]/route"
+import { prisma } from "@/lib/db"
+import { NextResponse } from "next/server"
 
-export async function PUT(req: Request) {
-  const session = await getServerSession()
-
-  if (!session) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-  }
-
-  const { name, companyName, companyType, industry, location, description, website } = await req.json()
-
+export async function GET() {
   try {
-    const updatedUser = await prisma.user.update({
-      where: { email: session.user?.email as string },
-      data: { name, companyName, companyType, industry, location, description, website },
+    const session = await getServerSession(authOptions)
+
+    if (!session || !session.user?.email) {
+      return NextResponse.json(
+        { error: "Unauthorized" },
+        { status: 401 }
+      )
+    }
+
+    const user = await prisma.user.findUnique({
+      where: {
+        email: session.user.email,
+      },
+      select: {
+        name: true,
+        email: true,
+        companyName: true,
+        companyType: true,
+        industry: true,
+        location: true,
+        description: true,
+        website: true,
+      },
     })
 
-    return NextResponse.json(updatedUser)
+    if (!user) {
+      return NextResponse.json(
+        { error: "User not found" },
+        { status: 404 }
+      )
+    }
+
+    return NextResponse.json(user)
   } catch (error) {
-    console.error('Profile update error:', error)
-    return NextResponse.json({ error: 'Failed to update profile' }, { status: 500 })
+    console.error("Profile fetch error:", error)
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 }
+    )
   }
 }
