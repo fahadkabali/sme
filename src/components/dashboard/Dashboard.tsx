@@ -12,16 +12,7 @@ import LogoutButton from '../auth/LogoutButton';
 import Header from './Header';
 
 // Types
-interface UserProfile {
-  name: string;
-  email: string;
-  companyName: string;
-  companyType: string;
-  industry: string;
-  location: string;
-  description: string;
-  website: string;
-}
+
 
 // Sidebar Navigation Items
 const navigationItems = [
@@ -32,45 +23,10 @@ const navigationItems = [
 ];
 
 // Profile Card Component
-const ProfileCard = ({ user }: { user: UserProfile }) => (
-  <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-    <div className="flex items-center space-x-4 mb-4">
-      <div className="bg-blue-500 rounded-full w-12 h-12 flex items-center justify-center">
-        <span className="text-white text-xl font-bold">
-          {user.name.charAt(0)}
-        </span>
-      </div>
-      <div>
-        <h3 className="text-lg font-semibold">{user.name}</h3>
-        <p className="text-sm text-gray-600">{user.email}</p>
-      </div>
-    </div>
-    <div className="space-y-2">
-      <InfoRow label="Company" value={user.companyName} />
-      <InfoRow label="Industry" value={user.industry} />
-      <InfoRow label="Location" value={user.location} />
-    </div>
-    {user.website && (
-      <a
-        href={user.website}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="mt-4 text-blue-500 hover:underline inline-flex items-center"
-      >
-        Visit Website
-        <ChevronRight className="w-4 h-4 ml-1" />
-      </a>
-    )}
-  </div>
-);
+
 
 // Info Row Component
-const InfoRow = ({ label, value }: { label: string; value: string }) => (
-  <div className="flex justify-between items-center">
-    <span className="text-gray-600 text-sm">{label}</span>
-    <span className="font-medium">{value}</span>
-  </div>
-);
+
 
 // Loading Spinner Component
 const LoadingSpinner = () => (
@@ -204,20 +160,16 @@ export default function Dashboard() {
         {/* Content */}
         <main className="p-6">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {/* Left Column */}
-            <div className="lg:col-span-1">
-              <ProfileCard user={user} />
-            </div>
 
             {/* Right Column */}
             <div className="lg:col-span-2 space-y-6">
               <div className="bg-white rounded-lg shadow-md p-6">
-                <h2 className="text-xl font-bold mb-4">Recent Interactions</h2>
+                <h2 className="text-xl font-bold mb-8">Recent Interactions</h2>
                 <InteractionsDashboard />
               </div>
 
               <div className="bg-white rounded-lg shadow-md p-6">
-                <h2 className="text-xl font-bold mb-4">Your Matches</h2>
+                <h2 className="text-xl font-bold mb-6">Your Matches</h2>
                 <MatchList />
               </div>
             </div>
