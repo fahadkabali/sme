@@ -45,13 +45,13 @@ export async function findMatches(userId: string, page = 1, limit = 10, filters:
   }, {});
 
   const potentialMatches = await prisma.user.findMany({
-    where?: whereConditionsModified,
+    where: whereConditionsModified,
     skip: (page - 1) * limit,
     take: limit,
   })
 
   const totalMatches = await prisma.user.count({
-    where?: whereConditions,
+    where: whereConditions,
   })
   const recommendations = await getRecommendations(userId, limit)
 
