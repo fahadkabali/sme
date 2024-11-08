@@ -9,9 +9,10 @@ import MatchList from '../matches/MatchList';
 import InteractionsDashboard from './InteractionsDashboard';
 import ProfileForm from '../profile/ProfileForm';
 import LogoutButton from '../auth/LogoutButton';
+import Header from './Header';
 
 // Types
-interface UserProfile {
+export interface UserProfile {
   name: string;
   email: string;
   companyName: string;
@@ -138,6 +139,7 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen bg-gray-100">
+      <Header user={user} onLogout={() => { /* your logout logic */ }} />
       {/* Sidebar */}
       <aside
         className={`fixed inset-y-0 left-0 bg-white shadow-lg transform ${
