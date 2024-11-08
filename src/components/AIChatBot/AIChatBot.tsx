@@ -25,40 +25,40 @@ export const AIChatbot: React.FC = () => {
 
   useEffect(scrollToBottom, [messages]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!input.trim()) return;
+  // const handleSubmit = async (e: React.FormEvent) => {
+  //   e.preventDefault();
+  //   if (!input.trim()) return;
 
-    const userMessage: Message = { role: 'user', content: input };
-    setMessages((prev) => [...prev, userMessage]);
-    setInput('');
-    setIsLoading(true);
+  //   const userMessage: Message = { role: 'user', content: input };
+  //   setMessages((prev) => [...prev, userMessage]);
+  //   setInput('');
+  //   setIsLoading(true);
 
-    try {
-      const response = await openai.chat.completions.create({
-        model: 'gpt-3.5-turbo',
-        messages: [
-          { role: 'system', content: 'You are a helpful assistant.' },
-          ...messages,
-          userMessage,
-        ],
-      });
+  //   try {
+  //     const response = await openai.chat.completions.create({
+  //       model: 'gpt-3.5-turbo',
+  //       messages: [
+  //         { role: 'system', content: 'You are a helpful assistant.' },
+  //         ...messages,
+  //         userMessage,
+  //       ],
+  //     });
 
-      const assistantMessage: Message = {
-        role: 'assistant',
-        content: response.choices[0].message?.content || 'Sorry, I couldn\'t generate a response.',
-      };
-      setMessages((prev) => [...prev, assistantMessage]);
-    } catch (error) {
-      console.error('Error calling OpenAI API:', error);
-      setMessages((prev) => [
-        ...prev,
-        { role: 'assistant', content: 'Sorry, there was an error processing your request.' },
-      ]);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  //     const assistantMessage: Message = {
+  //       role: 'assistant',
+  //       content: response.choices[0].message?.content || 'Sorry, I couldn\'t generate a response.',
+  //     };
+  //     setMessages((prev) => [...prev, assistantMessage]);
+  //   } catch (error) {
+  //     console.error('Error calling OpenAI API:', error);
+  //     setMessages((prev) => [
+  //       ...prev,
+  //       { role: 'assistant', content: 'Sorry, there was an error processing your request.' },
+  //     ]);
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!input.trim()) return;
