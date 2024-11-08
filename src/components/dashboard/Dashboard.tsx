@@ -12,7 +12,7 @@ import LogoutButton from '../auth/LogoutButton';
 import Header from './Header';
 
 // Types
-export interface UserProfile {
+interface UserProfile {
   name: string;
   email: string;
   companyName: string;
