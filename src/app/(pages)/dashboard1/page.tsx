@@ -5,7 +5,6 @@ import LogoutButton from '@/components/auth/LogoutButton'
 import MatchList from '@/components/matches/MatchList'
 import InteractionsDashboard from '@/components/dashboard/InteractionsDashboard'
 import Dashboard from '@/components/dashboard/Dashboard'
-// import AnalyticsDashboard from '@/components/analytics/AnalyticsDashboard'
 
 export default async function DashboardPage() {
   const session = await getServerSession()
