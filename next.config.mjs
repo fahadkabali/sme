@@ -4,6 +4,7 @@ const nextConfig = {
         bodyParser: false,
         externalResolver: true,
       },
+      transpilePackages: ['three'],
     async headers() {
     return [
         {
