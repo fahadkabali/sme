@@ -19,6 +19,7 @@ export const authOptions: AuthOptions = {
       },
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) {
+          console.log("Welcome")
           return null
         }
 
@@ -27,6 +28,7 @@ export const authOptions: AuthOptions = {
         })
 
         if (!user) {
+          console.log("User not found")
           return null
         }
 
