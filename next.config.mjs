@@ -4,7 +4,12 @@ const nextConfig = {
         bodyParser: false,
         externalResolver: true,
       },
-      transpilePackages: ['three'],
+    webpack: (config) => {
+        config.resolve.fallback = { fs: false, net: false, tls: false };
+        return config;
+      },
+    transpilePackages: ['three'],
+
     async headers() {
     return [
         {

@@ -1,7 +1,8 @@
 "use client";
-import { Stars } from "@react-three/drei";
+
+import React, { useEffect, Suspense } from "react";
 import { Canvas } from "@react-three/fiber";
-import React, { useEffect } from "react";
+import { Stars } from "@react-three/drei";
 import { FiArrowRight } from "react-icons/fi";
 import {
   useMotionTemplate,
@@ -12,7 +13,7 @@ import {
 
 const COLORS_TOP = ["#13FFAA", "#1E67C6", "#CE84CF", "#DD335C"];
 
-export default function AuroraHero() {
+function AuroraHeroContent() {
   const color = useMotionValue(COLORS_TOP[0]);
 
   useEffect(() => {
@@ -67,10 +68,28 @@ export default function AuroraHero() {
       </div>
 
       <div className="absolute inset-0 z-0">
-        <Canvas>
-          <Stars radius={50} count={2500} factor={4} fade speed={2} />
+        <Canvas
+          style={{ 
+            position: 'absolute', 
+            top: 0, 
+            left: 0, 
+            width: '100%', 
+            height: '100%' 
+          }}
+        >
+          <Suspense fallback={null}>
+            <Stars radius={50} count={2500} factor={4} fade speed={2} />
+          </Suspense>
         </Canvas>
       </div>
     </motion.section>
+  );
+}
+
+export default function AuroraHero() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <AuroraHeroContent />
+    </Suspense>
   );
 }

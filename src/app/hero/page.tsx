@@ -1,11 +1,16 @@
 "use client";
-import dynamic from 'next/dynamic';
 
-// Dynamically import the AuroraHero component to ensure client-side rendering
-const AuroraHero = dynamic(() => import('../../components/AuroraHero'), { 
+import dynamic from 'next/dynamic';
+import { Suspense } from 'react';
+
+const AuroraHero = dynamic(() => import('../../components/hero'), { 
   ssr: false 
 });
 
 export default function HeroPage() {
-  return <AuroraHero />;
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <AuroraHero />
+    </Suspense>
+  );
 }
