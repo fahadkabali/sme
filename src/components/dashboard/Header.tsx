@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Bell, Search, ChevronDown, User, Settings, HelpCircle, LogOut } from 'lucide-react';
+import LogoutButton from '../auth/LogoutButton';
 
 
 interface UserProfile {
@@ -73,7 +74,7 @@ const Header = ({ user, onLogout }: HeaderProps) => {
 
   return (
     <>
-      <header className="bg-white border-b border-gray-200 fixed w-full z-20 top-0 shadow-sm">
+      <header className="bg-white border-b border-gray-200 fixed w-full z-20 top-0 shadow-sm ">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             {/* Left section */}
@@ -183,13 +184,10 @@ const Header = ({ user, onLogout }: HeaderProps) => {
                         <HelpCircle className="mr-2 h-4 w-4" />
                         <span>Help Center</span>
                       </button>
-                      <button
-                        onClick={onLogout}
-                        className="flex items-center w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors duration-150 border-t border-gray-100"
-                      >
+                      <LogoutButton>
                         <LogOut className="mr-2 h-4 w-4" />
                         <span>Logout</span>
-                      </button>
+                      </LogoutButton>   
                     </div>
                   </div>
                 )}
