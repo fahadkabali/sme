@@ -14,10 +14,11 @@ const Layout = ({ children }: LayoutProps) => {
       <Head>
         <title>Dashboard</title>
       </Head>
-      <DashboardLayout>
-        <main>{children}</main>
-      </DashboardLayout>
-      <Footer />
+      <main>
+        <DashboardLayout/>
+        {children}
+        <Footer />
+      </main>
     </>
   );
 };
