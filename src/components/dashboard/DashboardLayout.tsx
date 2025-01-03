@@ -1,4 +1,5 @@
 "use client"
+
 import React, { useState } from 'react';
 import Sidebar from './sidebar/Sidebar';
 import Header from './Header';
@@ -50,17 +51,22 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
   };
 
   return (
-    <div className="min-h-screen flex bg-gray-100 dark:bg-gray-900">
+    <div className="flex h-screen bg-gray-100 dark:bg-gray-900">
       {/* Sidebar */}
-      <Sidebar 
-        isOpen={isSidebarOpen}
-        className={`fixed left-0 h-full z-30 transition-all duration-300 ease-in-out ${
-          isSidebarOpen ? `w-[${SIDEBAR_OPEN_WIDTH}px]` : `w-[${SIDEBAR_CLOSED_WIDTH}px]`
+      <aside 
+        className={`fixed left-0 h-full transition-all duration-300 ease-in-out ${
+          isSidebarOpen ? 'w-64' : 'w-20'
         }`}
-      />
-      
-      {/* Main Content Area */}
-      <div className="flex flex-col min-h-screen w-full">
+      >
+        <Sidebar isOpen={isSidebarOpen} />
+      </aside>
+
+      {/* Main Content Wrapper */}
+      <div 
+        className={`flex flex-col flex-1 min-h-screen transition-all duration-300 ease-in-out ${
+          isSidebarOpen ? 'ml-64' : 'ml-20'
+        }`}
+      >
         {/* Header */}
         <Header
           user={userProfile}
@@ -68,31 +74,19 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
           sidebarWidth={isSidebarOpen ? SIDEBAR_OPEN_WIDTH : SIDEBAR_CLOSED_WIDTH}
           isSidebarOpen={isSidebarOpen}
           onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
-          className="fixed top-0 right-0 z-20"
+          className="sticky top-0 z-20 w-full"
         />
-        
+
         {/* Main Content */}
-        <main 
-          className={`flex-grow p-6 mt-16 transition-all duration-300 ease-in-out ${
-            isSidebarOpen 
-              ? `ml-[${SIDEBAR_OPEN_WIDTH}px]` 
-              : `ml-[${SIDEBAR_CLOSED_WIDTH}px]`
-          }`}
-        >
-          <div className="container mx-auto max-w-7xl">
-            {children}
-          </div>
+        <main className="flex-grow px-4 py-6 md:px-6 lg:px-8">
+          {children}
         </main>
 
         {/* Footer */}
-        <Footer 
+        <Footer
           sidebarWidth={isSidebarOpen ? SIDEBAR_OPEN_WIDTH : SIDEBAR_CLOSED_WIDTH}
           isSidebarOpen={isSidebarOpen}
-          className={`transition-all duration-300 ease-in-out ${
-            isSidebarOpen 
-              ? `ml-[${SIDEBAR_OPEN_WIDTH}px]` 
-              : `ml-[${SIDEBAR_CLOSED_WIDTH}px]`
-          }`}
+          className="w-full"
         />
       </div>
     </div>
