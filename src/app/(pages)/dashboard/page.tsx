@@ -38,7 +38,7 @@ export default async function DashboardPage() {
     <div className="min-h-screen bg-gray-100 p-8">
       <Dashboard />
       <div className="mt-8">
-        <AnalyticsDashboard />
+        {/* <AnalyticsDashboard /> */}
       </div>
     </div>
   )

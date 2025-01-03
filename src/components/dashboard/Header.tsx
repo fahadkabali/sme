@@ -1,3 +1,4 @@
+"use client"
 import React, { useState, useRef, useEffect } from 'react';
 import { Bell, Search, ChevronDown, User, Settings, HelpCircle, Menu } from 'lucide-react';
 import LogoutButton from '../auth/LogoutButton';

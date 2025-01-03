@@ -10,6 +10,7 @@ import InteractionsDashboard from './InteractionsDashboard';
 import ProfileForm from '../profile/ProfileForm';
 import LogoutButton from '../auth/LogoutButton';
 import Header from './Header';
+import { useCallback } from 'react';
 
 // Types
 
@@ -22,6 +23,16 @@ const navigationItems = [
   { name: 'Settings', icon: Settings, href: '/settings' },
 ];
 
+interface UserProfile {
+  name: string;
+  email: string;
+  companyName: string;
+  companyType: string;
+  industry: string;
+  location: string;
+  description: string;
+  website: string;
+}
 // Profile Card Component
 
 
@@ -59,26 +70,22 @@ export default function Dashboard() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const router = useRouter();
 
-  useEffect(() => {
-    fetchUserProfile();
-  }, []);
-
-  async function fetchUserProfile() {
+  const fetchUserProfile = useCallback(async () => {
     try {
       setIsLoading(true);
       setError(null);
-      
+  
       const response = await fetch('/api/profile');
-      
+  
       if (response.status === 401) {
         router.push('/login');
         return;
       }
-
+  
       if (!response.ok) {
         throw new Error(`Failed to fetch profile: ${response.statusText}`);
       }
-
+  
       const data = await response.json();
       setUser(data);
     } catch (error) {
@@ -87,7 +94,13 @@ export default function Dashboard() {
     } finally {
       setIsLoading(false);
     }
-  }
+  }, [setIsLoading, setError, setUser, router]);
+
+  useEffect(() => {
+    fetchUserProfile();
+  }, [fetchUserProfile]);
+
+ 
 
   if (isLoading) return <LoadingSpinner />;
   if (error) return <ErrorMessage message={error} retry={fetchUserProfile} />;

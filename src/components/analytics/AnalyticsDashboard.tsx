@@ -1,27 +1,47 @@
-'use client'
+'use client';
 
-import { useState, useEffect } from 'react'
-import { Bar, Line } from 'react-chartjs-2'
-import { Chart as ChartJS } from 'chart.js/auto'
+import { useState, useEffect } from 'react';
+import { Bar, Line } from 'react-chartjs-2';
+import {
+  Chart as ChartJS,
+  CategoryScale, // Required for x-axis as "category"
+  LinearScale,   // Required for y-axis as "linear"
+  BarElement,    // Required for Bar chart
+  LineElement,   // Required for Line chart
+  PointElement,  // Required for points in Line chart
+  Tooltip,
+  Legend,
+} from 'chart.js';
+
+// Register required components
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  LineElement,
+  PointElement,
+  Tooltip,
+  Legend
+);
 
 interface MatchAnalytics {
-  month: string
-  newMatches: number
-  interactedMatches: number
+  month: string;
+  newMatches: number;
+  interactedMatches: number;
 }
 
 export default function AnalyticsDashboard() {
-  const [matchAnalytics, setMatchAnalytics] = useState<MatchAnalytics[]>([])
+  const [matchAnalytics, setMatchAnalytics] = useState<MatchAnalytics[]>([]);
 
   useEffect(() => {
-    fetchMatchAnalytics()
-  }, [])
+    fetchMatchAnalytics();
+  }, []);
 
   async function fetchMatchAnalytics() {
-    const response = await fetch('/api/analytics')
+    const response = await fetch('/api/analytics');
     if (response.ok) {
-      const data = await response.json()
-      setMatchAnalytics(data)
+      const data = await response.json();
+      setMatchAnalytics(data);
     }
   }
 
@@ -43,7 +63,7 @@ export default function AnalyticsDashboard() {
         borderWidth: 1,
       },
     ],
-  }
+  };
 
   const lineChartData = {
     labels: matchAnalytics.map((item) => item.month),
@@ -63,7 +83,7 @@ export default function AnalyticsDashboard() {
         tension: 0.1,
       },
     ],
-  }
+  };
 
   return (
     <div>
@@ -79,5 +99,5 @@ export default function AnalyticsDashboard() {
         </div>
       </div>
     </div>
-  )
+  );
 }
