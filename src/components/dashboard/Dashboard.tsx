@@ -129,10 +129,7 @@ export default function Dashboard() {
           </nav>
 
           <div className="p-4 border-t">
-            <LogoutButton className="flex items-center space-x-2 px-4 py-3 text-red-600 hover:bg-red-50 rounded-lg w-full">
-              <LogOut className="h-5 w-5" />
-              <span>Logout</span>
-            </LogoutButton>
+            <LogoutButton />
           </div>
         </div>
       </aside>

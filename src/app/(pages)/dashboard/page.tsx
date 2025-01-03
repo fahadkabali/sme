@@ -5,7 +5,7 @@ import LogoutButton from '@/components/auth/LogoutButton'
 import MatchList from '@/components/matches/MatchList'
 import InteractionsDashboard from '@/components/dashboard/InteractionsDashboard'
 import Dashboard from '@/components/dashboard/Dashboard'
-// import AnalyticsDashboard from '@/components/analytics/AnalyticsDashboard'
+import AnalyticsDashboard from '@/components/analytics/AnalyticsDashboard'
 
 export default async function DashboardPage() {
   const session = await getServerSession()
@@ -38,7 +38,7 @@ export default async function DashboardPage() {
     <div className="min-h-screen bg-gray-100 p-8">
       <Dashboard />
       <div className="mt-8">
-        {/* <AnalyticsDashboard /> */}
+        <AnalyticsDashboard />
       </div>
     </div>
   )
