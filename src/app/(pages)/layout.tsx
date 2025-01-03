@@ -1,8 +1,6 @@
 import React from 'react';
 import Head from 'next/head';
 import DashboardLayout from '../../components/dashboard/DashboardLayout';
-import Footer from '../../components/dashboard/Footer';
-import Dashboard from '../../components/dashboard/Dashboard';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -11,14 +9,9 @@ interface LayoutProps {
 const Layout = ({ children }: LayoutProps) => {
   return (
     <>
-      <Head>
-        <title>Dashboard</title>
-      </Head>
-      <main>
-        <DashboardLayout/>
+    <DashboardLayout>
         {children}
-        <Footer />
-      </main>
+    </DashboardLayout>
     </>
   );
 };

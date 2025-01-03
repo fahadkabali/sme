@@ -2,10 +2,10 @@
 import React, { useState } from 'react';
 import Sidebar from './sidebar/Sidebar';
 import Header from './Header';
-import { useSession } from "next-auth/react"; // Assuming you're using NextAuth
+import Footer from './Footer';
+import { useSession } from "next-auth/react";
 import { signOut } from "next-auth/react";
 
-// Types for user profile
 interface UserProfile {
   name: string;
   email: string;
@@ -22,11 +22,12 @@ interface DashboardLayoutProps {
 }
 
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
-  // State for sidebar
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-  
-  // Get session data (if using NextAuth)
   const { data: session } = useSession();
+
+  // Sidebar width constants
+  const SIDEBAR_OPEN_WIDTH = 256;
+  const SIDEBAR_CLOSED_WIDTH = 80;
 
   // Create user profile from session data
   const userProfile: UserProfile = {
@@ -40,7 +41,6 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
     website: session?.user?.website || '',
   };
 
-  // Logout handler
   const handleLogout = async () => {
     try {
       await signOut({ redirect: true, callbackUrl: '/auth/signin' });
@@ -50,28 +50,50 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
   };
 
   return (
-    <div className="flex min-h-screen bg-gray-100 dark:bg-gray-900">
+    <div className="min-h-screen flex bg-gray-100 dark:bg-gray-900">
+      {/* Sidebar */}
       <Sidebar 
         isOpen={isSidebarOpen}
-        className={`transition-all duration-300 ease-in-out ${
-          isSidebarOpen ? 'w-64' : 'w-20'
+        className={`fixed left-0 h-full z-30 transition-all duration-300 ease-in-out ${
+          isSidebarOpen ? `w-[${SIDEBAR_OPEN_WIDTH}px]` : `w-[${SIDEBAR_CLOSED_WIDTH}px]`
         }`}
       />
       
-      <div className="flex flex-1 flex-col">
+      {/* Main Content Area */}
+      <div className="flex flex-col min-h-screen w-full">
+        {/* Header */}
         <Header
           user={userProfile}
           onLogout={handleLogout}
-          sidebarWidth={isSidebarOpen ? 256 : 80}
+          sidebarWidth={isSidebarOpen ? SIDEBAR_OPEN_WIDTH : SIDEBAR_CLOSED_WIDTH}
           isSidebarOpen={isSidebarOpen}
           onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
+          className="fixed top-0 right-0 z-20"
         />
         
-        <main className={`flex-1 p-6 transition-all duration-300 ease-in-out ${
-          isSidebarOpen ? 'ml-64' : 'ml-20'
-        }`}>
-          {children}
+        {/* Main Content */}
+        <main 
+          className={`flex-grow p-6 mt-16 transition-all duration-300 ease-in-out ${
+            isSidebarOpen 
+              ? `ml-[${SIDEBAR_OPEN_WIDTH}px]` 
+              : `ml-[${SIDEBAR_CLOSED_WIDTH}px]`
+          }`}
+        >
+          <div className="container mx-auto max-w-7xl">
+            {children}
+          </div>
         </main>
+
+        {/* Footer */}
+        <Footer 
+          sidebarWidth={isSidebarOpen ? SIDEBAR_OPEN_WIDTH : SIDEBAR_CLOSED_WIDTH}
+          isSidebarOpen={isSidebarOpen}
+          className={`transition-all duration-300 ease-in-out ${
+            isSidebarOpen 
+              ? `ml-[${SIDEBAR_OPEN_WIDTH}px]` 
+              : `ml-[${SIDEBAR_CLOSED_WIDTH}px]`
+          }`}
+        />
       </div>
     </div>
   );
